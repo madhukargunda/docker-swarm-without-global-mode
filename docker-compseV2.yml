@@ -1,0 +1,61 @@
+
+
+version: '3.7'
+
+services:
+  account-service1:
+    image: madhukargunda/account-service:1.0
+    ports:
+      - 80:2222
+    container_name: account-service
+    restart:
+      on-failure
+    networks:
+      - back-end
+    deploy:
+      placement:
+        constraints: [node.hostname == worker1]
+ 
+
+  account-service2:
+    image: madhukargunda/account-service:1.0
+    ports:
+      - 81:2222
+    container_name: account-service
+    restart:
+      on-failure
+    networks:
+      - back-end
+    deploy:
+      placement:
+        constraints: [node.hostname == worker2]
+
+  account-service3:
+    image: madhukargunda/account-service:1.0
+    ports:
+      - 82:2222
+    container_name: account-service
+    restart:
+      on-failure
+    networks:
+      - back-end
+    deploy:
+      placement:
+        constraints: [node.hostname == worker3]
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "7001:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - back-end
+
+networks: 
+  back-end:
+    driver: overlay
+    
