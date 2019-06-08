@@ -42,8 +42,18 @@ we have three node cluster in docker and we want to replicated or scale up from 
   --placement-pref 'spread=node.labels.rack' \
   redis:3.0.6
 
-- 9. 
 
+version: "3.7"
+services:
+  db:
+    image: postgres
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+          - engine.labels.operatingsystem == ubuntu 14.04
+        preferences:
+          - spread: node.labels.zone
 
 
 ```
