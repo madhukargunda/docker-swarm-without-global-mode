@@ -5,38 +5,37 @@ we have three node cluster in docker and we want to replicated or scale up from 
 ```
 ## Placement Prefrences
 
-- 1.We can set up the service to divide tasks evenly over different categories of nodes.
+- We can set up the service to divide tasks evenly over different categories of nodes.
 
-- 2.This uses --placement-pref with a spread strategy (currently the only supported strategy) to spread tasks evenly over 
+- This uses --placement-pref with a spread strategy (currently the only supported strategy) to spread tasks evenly over 
     the values of the datacenter node label.
     
-- 3.Lets take example each node has the datacenter label attached to it.
+- Lets take example each node has the datacenter label attached to it.
     
     Three nodes with node.labels.datacenter=east
     Two nodes with node.labels.datacenter=south
     One node with node.labels.datacenter=west
     
-- 4.Since we are spreading over the values of the datacenter label and the service has 9 replicas, 3 replicas will end up in 
+- Since we are spreading over the values of the datacenter label and the service has 9 replicas, 3 replicas will end up in 
     each datacenter. There are three nodes associated with the value east, so each one will get one of the three replicas 
     reserved for this value. There are two nodes with the value south, and the three replicas for this value will be divided 
     between them, with one receiving two replicas and another receiving just one. Finally, west has a single node that will 
     get all three replicas reserved for west.
  
-- 5.docker service create \
+   docker service create \
      --replicas 9 \
       --name redis_2 \
       --placement-pref 'spread=node.labels.datacenter' \
     redis:3.0.6
 
-- 6.If the nodes in one category (for example, those with node.labels.datacenter=south) 
+- If the nodes in one category (for example, those with node.labels.datacenter=south) 
     can’t handle their fair share of tasks due to constraints or resource limitations, 
     the extra tasks will be assigned to other nodes instead, if possible.
     
-- 7. Both engine labels and node labels are supported by placement preferences
+- Both engine labels and node labels are supported by placement preferences
 
-- 8.
 
- ocker service create \
+ docker service create \
   --replicas 9 \
   --name redis_2 \
   --placement-pref 'spread=node.labels.datacenter' \
